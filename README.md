@@ -1,9 +1,9 @@
 # express-auditor
-Audit express request and responses
+Audit express requests and responses
 
 ## Installation
 
-Install package in your [NodeJS](https://nodejs.org/) project
+Install this package in your [NodeJS](https://nodejs.org/) project
 
 ```bash
 $ yarn add express-auditor
@@ -26,10 +26,20 @@ import { createAuditor } from 'express-auditor'
 const app = express()
 
 // create auditor and middleware instance
-const { auditor, handler } = createAuditor(/* options */)
+const { auditor, handler, errorHandler } = createAuditor(/* options */)
+
+// setup the body/response types to auditor catch him
+app.use(express.json())
 
 // the handler object return is the express middleware
 app.use(handler)
+
+/*
+  routes, middlewares, ...etc
+*/
+
+// put errorHandler after all definitions to catch uncaught exceptions in your routes
+app.use(errorHandler)
 
 app.listen(3000, () => console.log('app is running'))
 ```
@@ -40,7 +50,7 @@ The `audit` property is injected in all `Request` object
 
 ```ts
 app.use('/', (request: Request, response: Response) => {
-  request.audit
+  // request.audit.doSomething
 
   /* do something */
 })
@@ -96,6 +106,12 @@ auditor.on('finish', (store) => {
           headers: object,
           statusCode: number,
           statusMessage: string
+        },
+
+        exception?: {
+          name: string,
+          message: string,
+          stack: StackTrace[]
         }
       }
     }

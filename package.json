@@ -1,7 +1,15 @@
 {
   "name": "express-auditor",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "Arthur Santos <silva.arthur@accademico.ifpb.edu.br>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jarthursantos/express-auditor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jarthursantos/express-auditor/issues"
+  },
+  "homepage": "https://github.com/jarthursantos/express-auditor#readme",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

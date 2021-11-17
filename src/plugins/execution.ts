@@ -2,9 +2,18 @@
 import { OutgoingHttpHeaders } from 'http'
 import { Request } from 'express';
 import { Plugin } from './index'
+import { StackTrace } from '../utils/stack-trace';
 
 export interface ExecutionPlugin {
   setResponseBody(body: string): void
+  setException(exception: Omit<ExceptionData, 'launchedAt'>): void
+}
+
+export interface ExceptionData {
+  name: string
+  message: string
+  stack: StackTrace[]
+  launchedAt: Date
 }
 
 export interface ExecutionStore {
@@ -18,6 +27,7 @@ export interface ExecutionStore {
     statusCode?: number
     statusMessage?: string
   }
+  exception?: ExceptionData
 }
 
 const plugin: Plugin<ExecutionPlugin, ExecutionStore> = {
@@ -48,6 +58,13 @@ const plugin: Plugin<ExecutionPlugin, ExecutionStore> = {
         setResponseBody(body) {
           store.response.body = body
         },
+
+        setException(stack) {
+          store.exception = {
+            ...stack,
+            launchedAt: new Date()
+          }
+        }
       },
 
       finish() {
